@@ -2,74 +2,67 @@ import argparse
 from pathlib import Path
 import pandas as pd
 from .read_existing import import_file
-from datetime import datetime
+from .read_batch import read_batch_file
 
 
 def read_args():
     parser = argparse.ArgumentParser(
         description='Process and export data files.')
-    parser.add_argument('--a', type=str, default=None,
-                        help='Path to the input file (csv, json, or excel) to Update')
-    parser.add_argument(
-        '--o', type=str, default=f'results/result-{datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}', help='Name for the output file')
-    parser.add_argument(
-        '--t', type=str, choices=['csv', 'json', 'excel'], help='Type of the output file')
-    parser.add_argument('--url', type=str, required=True,
+    parser.add_argument('--file', type=str, default=None, required=True,
+                        help='File to be updated or new file to be created to store the results.')
+    parser.add_argument('--batch', type=str, default=None,
+                        help='Run in Batch mode reading from a file.')
+    parser.add_argument('--url', type=str, default=None,
                         help='URL to be processed')
 
     args = parser.parse_args()
-    print(args)
-    if args.a is None and (args.o is None or args.t is None):
+
+    has_url = args.url is not None
+    has_batch = args.batch is not None
+
+    if not has_url and not has_batch:
+        parser.error('No URL or batch file provided.')
+    if has_url and has_batch:
         parser.error(
-            "You must provide either extend a file (--a), or create a new one (--o) (--t).")
-    if args.url is None:
-        parser.error("You must provide a URL to be processed.")
+            'Both URL and batch file provided. Please provide only one.')
 
     return args
 
 
-def append_mode(file_args):
-    print('Using exiting file: ', file_args.a)
-    input_path = Path(file_args.a)
-    df = import_file(input_path)
-    output_name = input_path.stem
-    type = input_path.suffix[1:]
-    type = 'excel' if type in ['xls', 'xlsx'] else type
-    return df, output_name, type
+def prepare_file(args_file):
+    input_path = Path(args_file)
+    input_file = import_file(
+        input_path) if input_path.exists() else pd.DataFrame()
+    file_name = input_path.stem
+    file_type = input_path.suffix[1:]
+    file_type = 'excel' if file_type in ['xls', 'xlsx'] else file_type
+    return input_file, file_name, file_type
 
 
-def create_mode(file_args):
-    print('Creating new file: ', file_args.o)
-    df = pd.DataFrame()
-    output_name = Path(file_args.o)
-    type = file_args.t
-    return df, output_name, type
-
-
-def prepare(file_args):
-    if file_args.a:
-        return append_mode(file_args)
+def prepare_url(file_args):
+    if file_args.batch:
+        return read_batch_file(Path(file_args.batch))
     else:
-        return create_mode(file_args)
+        return [file_args.url]
 
 
 def command_line():
     args = read_args()
-    df, output_name, type = prepare(args)
+    previous_data, file_name, type = prepare_file(args.file)
 
-    url = args.url
+    urls = prepare_url(args)
 
-    return df, output_name, type, url
+    return previous_data, file_name, type, urls
 
 
 def main():
     args = read_args()
 
-    df, output_name, type = prepare(args)
+    df, output_name, type = prepare_file(args)
 
-    url = args.url
+    urls = args.urls
 
-    print('Processing URL: ', url)
+    print('Processing URL: ', urls)
     print('Output file: ', output_name)
     print('Output type: ', type)
     print('Input file: ', df)

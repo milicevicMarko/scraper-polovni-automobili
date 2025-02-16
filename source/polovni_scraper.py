@@ -11,9 +11,9 @@ WAIT_FOR_ELEMENT_TIMEOUT = 10
 
 
 def init_selenium():
-    options = webdriver.ChromeOptions()
+    options = webdriver.FirefoxOptions()
     # options.add_argument('headless')
-    return webdriver.Chrome(options=options)
+    return webdriver.Firefox(options=options)
 
 
 def load_url(driver, url):
@@ -112,19 +112,20 @@ def quit_selenium(driver):
     driver.quit()
 
 
-def scrape_site(url):
-    driver = init_selenium()
+def scrape_site(driver, url):
     page_source = load_url(driver, url)
     source = cook_soup(page_source)
     result_json = extract_information(source)
-    quit_selenium(driver)
+    result_json['url'] = url
     return result_json
 
 
-def run_scrape(url):
-    result_json = scrape_site(url)
-    result = pd.DataFrame([result_json])
-    result['url'] = url
+def run_scrape(urls):
+    driver = init_selenium()
+    result_jsons = [scrape_site(driver, url) for url in urls]
+    quit_selenium(driver)
+    result = pd.DataFrame(result_jsons)
+    result = result.fillna(False)
     return result
 
 
