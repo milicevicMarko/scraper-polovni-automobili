@@ -33,12 +33,20 @@ python main.py --file "results/result.xlsx" --batch "batch.txt"
 python main.py --file "results/result.xlsx" -- url "https://www.polovniautomobili.com/auto-oglasi/25181599/volkswagen-golf-8-20dstyleled?attp=p1_pv0_pc1_pl1_plv0"
 ```
 
+# Visualize
+
+In order to visualize, you need to run:
+
+`streamlit run visualize.py -- <path_to_your_file>`
+
+> It can be xlsx, csv, json.
+
 ## Todo
 
 [] Add Contact info
 
 [] Add a chronjob to scrape changes
 
-[] Add a window tool to make life easier
+[] Add a window tool to make life easier for importing files
 
 [] Tool to show most highlight differences

@@ -1,10 +1,14 @@
+from pathlib import Path
 import streamlit as st
 from st_aggrid import AgGrid, GridOptionsBuilder
 import pandas as pd
+import argparse
+
+from source.read_existing import import_file
 
 
 def visualize(data_source):
-    df = pd.read_excel(data_source)
+    df = import_file(Path(data_source))
 
     gb = GridOptionsBuilder.from_dataframe(df)
     gb.configure_default_column(
@@ -19,5 +23,14 @@ def visualize(data_source):
            enable_enterprise_modules=True, width=1400, height=600)
 
 
+def main():
+    parser = argparse.ArgumentParser(description='Visualize scraped data.')
+    parser.add_argument('data_source', type=str,
+                        help='Path to the data source file')
+    args = parser.parse_args()
+
+    visualize(args.data_source)
+
+
 if __name__ == '__main__':
-    visualize('results/testing.xlsx')
+    main()
