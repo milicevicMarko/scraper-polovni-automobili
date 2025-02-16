@@ -2,6 +2,7 @@ import argparse
 from pathlib import Path
 import pandas as pd
 from .read_existing import import_file
+from .read_batch import get_batch
 from datetime import datetime
 
 
@@ -14,16 +15,23 @@ def read_args():
         '--o', type=str, default=f'results/result-{datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}', help='Name for the output file')
     parser.add_argument(
         '--t', type=str, choices=['csv', 'json', 'excel'], help='Type of the output file')
-    parser.add_argument('--url', type=str, required=True,
+    parser.add_argument('--url', type=str,
                         help='URL to be processed')
+    parser.add_argument('--batch', action='store_true',
+                        help='Run in Batch mode reading from a file')
+    parser.add_argument('--r', type=str, default='batch.txt',
+                        help='Path to the file with URLs to read in batch.')
 
     args = parser.parse_args()
     print(args)
     if args.a is None and (args.o is None or args.t is None):
         parser.error(
             "You must provide either extend a file (--a), or create a new one (--o) (--t).")
-    if args.url is None:
+    if args.url is None and not args.batch:
+        print(args)
         parser.error("You must provide a URL to be processed.")
+    if args.batch and args.r is None:
+        parser.error("You must provide a file with URLs to be processed.")
 
     return args
 
@@ -46,6 +54,12 @@ def create_mode(file_args):
     return df, output_name, type
 
 
+def batch_mode(file_path):
+    print('Batch mode reading from file: ', file_path)
+    urls = get_batch(file_path)
+    return urls
+
+
 def prepare(file_args):
     if file_args.a:
         return append_mode(file_args)
@@ -53,13 +67,20 @@ def prepare(file_args):
         return create_mode(file_args)
 
 
+def prepare_url(file_args):
+    if file_args.batch:
+        return batch_mode(file_args.r)
+    else:
+        return [file_args.url]
+
+
 def command_line():
     args = read_args()
     df, output_name, type = prepare(args)
 
-    url = args.url
+    urls = prepare_url(args)
 
-    return df, output_name, type, url
+    return df, output_name, type, urls
 
 
 def main():
@@ -67,9 +88,9 @@ def main():
 
     df, output_name, type = prepare(args)
 
-    url = args.url
+    urls = args.urls
 
-    print('Processing URL: ', url)
+    print('Processing URL: ', urls)
     print('Output file: ', output_name)
     print('Output type: ', type)
     print('Input file: ', df)

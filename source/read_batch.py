@@ -18,12 +18,11 @@ def is_valid_url(url):
     return re.match(regex, url) is not None
 
 
-def read_batch(file_path):
+def get_batch(file_path):
     try:
         urls = read_and_split_file(file_path)
-
         valid_urls = [url for url in urls if is_valid_url(url)]
-        return len(valid_urls)
+        return valid_urls
     except FileNotFoundError as e:
         print(f"Error: {e}")
         return None
@@ -34,5 +33,5 @@ def read_batch(file_path):
 
 if __name__ == '__main__':
     file_path = 'batch.txt'
-    result = read_batch(file_path)
+    result = get_batch(file_path)
     print(result)
