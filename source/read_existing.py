@@ -2,7 +2,7 @@ from pathlib import Path
 import pandas as pd
 
 
-def import_file(file_path: Path) -> str:
+def import_file(file_path: Path):
     if not file_path.exists():
         raise FileNotFoundError(f"File {file_path} does not exist")
     print(f"Importing file {file_path}...")
