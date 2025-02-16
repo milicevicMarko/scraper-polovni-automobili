@@ -11,9 +11,9 @@ WAIT_FOR_ELEMENT_TIMEOUT = 10
 
 
 def init_selenium():
-    options = webdriver.ChromeOptions()
+    options = webdriver.FirefoxOptions()
     # options.add_argument('headless')
-    return webdriver.Chrome(options=options)
+    return webdriver.Firefox(options=options)
 
 
 def load_url(driver, url):
