@@ -23,11 +23,11 @@ python main.py --a results/testing.xlsx --url 'https://www.polovniautomobili.com
 
 ## Todo
 
+[] Add Contact info
+
 [] Add a txt of links, go through all and spit out a result
 
 [] Add a chronjob to scrape changes
-
-[] Price!!!!! is missing hahahaha
 
 [] Add a window tool to make life easier
 
