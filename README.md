@@ -10,22 +10,32 @@ If a new file configuration is found, it will extend the existing file.
 
 ## How to use
 
-To use you can either append to a file, or create a new.
+Two modes of usage: **by Batch** or **by URL**.
 
+In both versions you need to pass a path to the file you wish to update/create. 
+The Files it can read are `XLSX, XLS, JSON, CSV`.
 
-```
-python main.py --o testing --t excel --url 'https://www.polovniautomobili.com/auto-oglasi/25181599/volkswagen-golf-8-20dstyleled?attp=p1_pv0_pc1_pl1_plv0'
-
-python main.py --a results/testing.xlsx --url 'https://www.polovniautomobili.com/auto-oglasi/25829255/volkswagen-golf-8-styleiqmasazamt6?attp=p1_pv0_pc1_pl1_plv0'
-```
+- If the file exists, it will be extended and saved to `results/<file_name>.<file_type>`
+- If the file does not exits, it will be created at the same `results/<file_name>.<file_type>`
 
 > Use main.py --h for more info.
+
+### Batch
+```
+python main.py --file "results/result.xlsx" --batch "batch.txt" 
+```
+
+> Expects a TXT file with a list of URLs split by a space/newline.
+
+
+### Single URL
+```
+python main.py --file "results/result.xlsx" -- url "https://www.polovniautomobili.com/auto-oglasi/25181599/volkswagen-golf-8-20dstyleled?attp=p1_pv0_pc1_pl1_plv0"
+```
 
 ## Todo
 
 [] Add Contact info
-
-[] Add a txt of links, go through all and spit out a result
 
 [] Add a chronjob to scrape changes
 

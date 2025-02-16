@@ -18,7 +18,7 @@ def is_valid_url(url):
     return re.match(regex, url) is not None
 
 
-def get_batch(file_path):
+def read_batch_file(file_path):
     try:
         urls = read_and_split_file(file_path)
         valid_urls = [url for url in urls if is_valid_url(url)]
@@ -33,5 +33,5 @@ def get_batch(file_path):
 
 if __name__ == '__main__':
     file_path = 'batch.txt'
-    result = get_batch(file_path)
+    result = read_batch_file(file_path)
     print(result)
