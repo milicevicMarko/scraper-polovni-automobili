@@ -10,7 +10,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-# python main.py --o testing --t excel --url 'https://www.polovniautomobili.com/auto-oglasi/25181599/volkswagen-golf-8-20dstyleled?attp=p1_pv0_pc1_pl1_plv0'
-# python main.py --a results/testing.xlsx --url 'https://www.polovniautomobili.com/auto-oglasi/25829255/volkswagen-golf-8-styleiqmasazamt6?attp=p1_pv0_pc1_pl1_plv0'
