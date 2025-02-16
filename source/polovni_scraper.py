@@ -8,6 +8,7 @@ from pathlib import Path
 import pandas as pd
 
 from write_result import export
+from datetime import datetime
 
 WAIT_FOR_ELEMENT_TIMEOUT = 10
 
@@ -120,11 +121,14 @@ def scrape_site(url):
     return result_json
 
 
-def run(url, name='result', type='json'):
+def run(url, name, type):
     result_json = scrape_site(url)
     result = pd.DataFrame([result_json])
+    print(result.columns)
     export(result, name, type)
 
 
 if __name__ == '__main__':
-    run('https://www.polovniautomobili.com/auto-oglasi/25181599/volkswagen-golf-8-20dstyleled?attp=p1_pv0_pc1_pl1_plv0', type='excel')
+    timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+    url = 'https://www.polovniautomobili.com/auto-oglasi/25181599/volkswagen-golf-8-20dstyleled?attp=p1_pv0_pc1_pl1_plv0'
+    run(url, name=f'result-{timestamp}', type='csv')

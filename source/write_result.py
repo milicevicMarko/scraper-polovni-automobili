@@ -14,7 +14,7 @@ def export(result: pd.DataFrame, name: str, type: str):
         result.to_csv(full_path, index=False)
     elif type == 'json':
         full_path = path_base / f'{name}.json'
-        result.to_json(full_path, orient='records')
+        result.to_json(full_path, orient='records', force_ascii=False)
     else:
         raise Exception('Unknown export type')
 
