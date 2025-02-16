@@ -73,6 +73,13 @@ def extract_basic_info(soup: BeautifulSoup):
         return {}
 
 
+def extract_price_info(soup: BeautifulSoup):
+    price_info = soup.find(
+        'span', class_='priceClassified')
+    print(price_info.get_text(strip=True))
+    return {'cena': price_info.get_text(strip=True) if price_info else ''}
+
+
 def extract_other_info(soup: BeautifulSoup):
     main_section = soup.find(
         'div', class_='js-tab-classified-content classified-content')
@@ -96,8 +103,9 @@ def extract_other_info(soup: BeautifulSoup):
 
 def extract_information(soup: BeautifulSoup):
     bi_result = extract_basic_info(soup)
+    pi_result = extract_price_info(soup)
     oi_result = extract_other_info(soup)
-    return {**bi_result, **oi_result}
+    return {**bi_result, **pi_result, **oi_result}
 
 
 def quit_selenium(driver):
@@ -116,6 +124,7 @@ def scrape_site(url):
 def run_scrape(url):
     result_json = scrape_site(url)
     result = pd.DataFrame([result_json])
+    result['url'] = url
     return result
 
 
