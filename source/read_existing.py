@@ -5,7 +5,7 @@ import pandas as pd
 def import_file(file_path: Path) -> str:
     if not file_path.exists():
         raise FileNotFoundError(f"File {file_path} does not exist")
-
+    print(f"Importing file {file_path}...")
     if file_path.suffix == '.csv':
         return pd.read_csv(file_path)
     elif file_path.suffix == '.json':

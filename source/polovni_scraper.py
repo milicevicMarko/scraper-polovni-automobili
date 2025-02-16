@@ -4,10 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 
-from pathlib import Path
 import pandas as pd
-
-from write_result import export
 from datetime import datetime
 
 WAIT_FOR_ELEMENT_TIMEOUT = 10
@@ -55,10 +52,6 @@ def extract_description(section):
     return {'opis': description.get_text(separator='\n', strip=True) if description else ''}
 
 
-def unkown_handler(section):
-    print("Unknown section")
-
-
 SECTION_EXTRACTION_RULES = {
     'Opšte informacije': extract_basic_info_section,
     'Dodatne informacije': extract_grid_listing,
@@ -89,7 +82,6 @@ def extract_other_info(soup: BeautifulSoup):
     if main_section is None:
         print("Failed to find main section")
     else:
-        print("Found main section")
         sections = main_section.find_all('section', recursive=False)
         for section in sections:
             section_name = section.find('h2').get_text(strip=True)
@@ -121,14 +113,15 @@ def scrape_site(url):
     return result_json
 
 
-def run(url, name, type):
+def run_scrape(url):
     result_json = scrape_site(url)
     result = pd.DataFrame([result_json])
-    print(result.columns)
-    export(result, name, type)
+    return result
 
 
 if __name__ == '__main__':
     timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
     url = 'https://www.polovniautomobili.com/auto-oglasi/25181599/volkswagen-golf-8-20dstyleled?attp=p1_pv0_pc1_pl1_plv0'
-    run(url, name=f'result-{timestamp}', type='csv')
+    run_scrape(url).to_json(
+        f'results/result-{timestamp}.json', orient='records', force_ascii=False)
+    print('Scraping done')
