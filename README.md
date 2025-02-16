@@ -8,6 +8,15 @@ You can either create a new file, or save to an existing.
 
 If a new file configuration is found, it will extend the existing file.
 
+## Prerequisites:
+
+```
+pip install pipenv
+pipenv shell
+pipenv install
+...
+```
+
 ## How to use
 
 Two modes of usage: **by Batch** or **by URL**.
