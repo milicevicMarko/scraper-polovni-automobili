@@ -20,7 +20,7 @@ def visualize(data_source):
     st.title("Scraped Data from Polovni Automobili")
     st.subheader(f"Showing data from: {data_source}")
     AgGrid(df, gridOptions=grid_options,
-           enable_enterprise_modules=True, width=1400, height=600)
+           enable_enterprise_modules=True, width=1000, height=1000)
 
 
 def main():
