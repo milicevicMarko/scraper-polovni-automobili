@@ -20,15 +20,19 @@ def prepare_dataframes(input, result):
 
 
 def clean_column_names(df):
-    df.columns = df.columns.str.lower().str.replace(' ', '_')
-    df.columns = df.columns.str.replace(':', '')
+    if not df.empty:
+        df.columns = df.columns.str.lower().str.replace(' ', '_')
+        df.columns = df.columns.str.replace(':', '')
     return df
 
 
 def delete_row_if_already_exists(input, result):
-    input['broj_oglasa'] = input['broj_oglasa'].astype(str)
-    result['broj_oglasa'] = result['broj_oglasa'].astype(str)
-    input = input[~input['broj_oglasa'].isin(result['broj_oglasa'])]
+    if 'broj_oglasa' in input.columns:
+        input['broj_oglasa'] = input['broj_oglasa'].astype(str)
+    if 'broj_oglasa' in result.columns:
+        result['broj_oglasa'] = result['broj_oglasa'].astype(str)
+    if 'broj_oglasa' in input.columns and 'broj_oglasa' in result.columns:
+        input = input[~input['broj_oglasa'].isin(result['broj_oglasa'])]
     return input, result
 
 
